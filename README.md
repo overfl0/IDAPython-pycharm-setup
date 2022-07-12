@@ -20,6 +20,8 @@ directory to the interpreter paths
 
 ![](paths.png)
 
-Autocompletion in PyCharm should now be working!
+Autocompletion and docstrings in PyCharm should now be working!
 
 ![](autocompletion.png)
+
+![](docstring.png)
