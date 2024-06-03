@@ -11,7 +11,7 @@ the jupyter kernel, running in IPyIDA.
 To spawn a separate console to see the results, open cmd and run:
 
 ############################################################################################
-python -m IPython console --existing --ZMQTerminalInteractiveShell.include_other_output=true
+python -m jupyter_console --existing --ZMQTerminalInteractiveShell.include_other_output=true
 ############################################################################################
 """
 
