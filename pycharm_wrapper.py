@@ -1,4 +1,5 @@
 import argparse
+import textwrap
 
 import jupyter_client
 from jupyter_client.manager import KernelManager
@@ -35,4 +36,23 @@ manager = KernelManager(connection_file=connection_file)
 manager.load_connection_file()
 client = manager.client()
 client.execute_interactive(f'%reset -f --aggressive', store_history=False)
+
+# Check if we're calling the PyCharm debugger
+if 'helpers/pydev/pydevd.py' in args.path:
+    # Remove the pydev module vendored in debugpy because it clashes with the
+    # one from PyCharm and hope it doesn't break anything
+    # Otherwise, we get:
+    # ModuleNotFoundError: No module named '_pydevd_bundle.pydevd_collect_try_except_info'
+    remove_debugpy_pydevd = textwrap.dedent("""\
+        import sys
+        import os
+
+        __blacklisted_path = f'{os.sep}debugpy{os.sep}_vendored{os.sep}'
+
+        for name in sys.modules.copy():
+            if 'pydev' in name and __blacklisted_path in getattr(sys.modules[name], '__file__', ''):
+                del sys.modules[name]
+        """)
+    client.execute_interactive(remove_debugpy_pydevd, store_history=True, allow_stdin=True)
+
 client.execute_interactive(command, store_history=True, allow_stdin=True)
